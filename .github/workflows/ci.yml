@@ -3,8 +3,8 @@ name: AI CI
 on:
   push:
     branches: [main, develop, infra/cicd]
-  pull_request:
-    branches: [main, develop]
+  # pull_request:
+  #   branches: [main, develop]
 
 jobs:
   ci:
