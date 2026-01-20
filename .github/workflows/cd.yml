@@ -41,8 +41,14 @@ jobs:
           echo "🛠 Install dependencies"
           sudo apt update
           sudo apt install -y python3-pip
-          python3 -m pip install --upgrade pip
-          python3 -m pip install -r requirements.txt || python3 -m pip install fastapi uvicorn
+          # 가상환경 생성 및 활성화
+          python3 -m venv .venv
+          source .venv/bin/activate
+  
+          # pip 업그레이드 및 의존성 설치
+          pip install --upgrade pip
+          pip install -r requirements.txt || pip install fastapi uvicorn
+
 
 
           echo "🛑 Stop existing AI process"
@@ -53,6 +59,8 @@ jobs:
           mkdir -p /home/ubuntu/logs
           export $(cat /home/ubuntu/mine/ai/4-team-IMYME-ai/.env | xargs)
 
+
+          source /home/ubuntu/mine/ai/4-team-IMYME-ai/.venv/bin/activate
 
           nohup uvicorn main:app \
             --host 0.0.0.0 \
