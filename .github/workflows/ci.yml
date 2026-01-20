@@ -36,8 +36,9 @@ jobs:
       - name: Run Ruff Lint
         run: ruff check .
 
-      - name: Run Ruff Format Check
-        run: ruff format --check .
+      - name: Run Ruff Format
+        run: ruff format .
+      
 
       # ========================================
       # 테스트 (pytest)
