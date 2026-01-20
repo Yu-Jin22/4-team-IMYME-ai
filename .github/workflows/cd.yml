@@ -40,14 +40,16 @@ jobs:
 
           echo "🛠 Install dependencies"
           sudo apt update
-          sudo apt install -y python3-pip
-          # 가상환경 생성 및 활성화
+          sudo apt install -y python3-pip python3-venv
+
+          # 가상환경 생성
           python3 -m venv .venv
+          # 활성화
           source .venv/bin/activate
-  
           # pip 업그레이드 및 의존성 설치
           pip install --upgrade pip
           pip install -r requirements.txt || pip install fastapi uvicorn
+
 
 
 
@@ -61,12 +63,13 @@ jobs:
 
 
           source /home/ubuntu/mine/ai/4-team-IMYME-ai/.venv/bin/activate
-
+          
           nohup uvicorn main:app \
             --host 0.0.0.0 \
             --port 8000 \
             --reload \
             > /home/ubuntu/logs/ai.log 2>&1 &
+
 
           sleep 5
 
