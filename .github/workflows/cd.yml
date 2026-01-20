@@ -39,8 +39,9 @@ jobs:
           git reset --hard origin/dev
 
           echo "🛠 Install dependencies"
-          pip install --upgrade pip
-          pip install -r requirements.txt || pip install fastapi uvicorn  # requirements 없으면 기본 설치
+          python3 -m pip install --upgrade pip
+          python3 -m pip install -r requirements.txt || python3 -m pip install fastapi uvicorn
+
 
           echo "🛑 Stop existing AI process"
           pkill -f 'uvicorn.*app' || true
