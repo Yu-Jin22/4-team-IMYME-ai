@@ -31,7 +31,8 @@ jobs:
 
           echo "🚀 AI Deploy start"
 
-          cd /home/ubuntu/mine/ai-server
+          cd /home/ubuntu/mine/ai/4-team-IMYME-ai
+
 
           echo "📥 Git sync"
           git fetch origin dev
@@ -47,7 +48,8 @@ jobs:
 
           echo "▶ Start AI server"
           mkdir -p /home/ubuntu/logs
-          export $(cat /home/ubuntu/mine/ai-server/.env | xargs)
+          export $(cat /home/ubuntu/mine/ai/4-team-IMYME-ai/.env | xargs)
+
 
           nohup uvicorn main:app \
             --host 0.0.0.0 \
