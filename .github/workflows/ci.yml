@@ -51,10 +51,10 @@ jobs:
       # 테스트 (pytest)
       # ========================================
       - name: Run Tests
-        env:
-          # 필요한 환경변수 추가
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          MODEL_PATH: ${{ secrets.MODEL_PATH }}
+        # env:
+        #   # 필요한 환경변수 추가
+        #   OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        #   MODEL_PATH: ${{ secrets.MODEL_PATH }}
         run: pytest
 
       # ========================================
