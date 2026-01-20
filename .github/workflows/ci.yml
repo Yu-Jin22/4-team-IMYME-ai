@@ -3,8 +3,6 @@ name: AI CI
 on:
   push:
     branches: [main, develop, infra/cicd]
-  # pull_request:
-  #   branches: [main, develop]
 
 jobs:
   ci:
@@ -19,31 +17,25 @@ jobs:
         with:
           python-version: "3.11"
 
-      # pip 의존성 캐싱 - 설치 속도 향상용
+      # pip 캐싱 (requirements.txt가 없으므로 기본 캐시 경로 사용)
       - name: Cache pip
         uses: actions/cache@v4
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
+          key: ${{ runner.os }}-pip-cache
 
       # 의존성 설치
       - name: Install dependencies
         run: |
           pip install --upgrade pip
-          pip install ruff pytest
-          pip install -r requirements.txt
+          pip install ruff pytest fastapi uvicorn  # 필요 패키지 직접 설치
 
       # ========================================
       # 정적 분석 (Static Analysis)
       # ========================================
-
-      # Ruff Lint (코드 품질) : 안쓰는 변수, 중복 import, 하드코딩 등
       - name: Run Ruff Lint
         run: ruff check .
 
-      # Ruff Format (코드 스타일) : 들여쓰기, 줄바꿈, 네이밍 등
       - name: Run Ruff Format Check
         run: ruff format --check .
 
@@ -51,20 +43,8 @@ jobs:
       # 테스트 (pytest)
       # ========================================
       - name: Run Tests
-        # env:
-        #   # 필요한 환경변수 추가
-        #   OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        #   MODEL_PATH: ${{ secrets.MODEL_PATH }}
         run: pytest
 
-      # ========================================
-      # 아티팩트 저장 (main 브랜치만) - FastAPI는 빌드 산출물 없음
-      # ========================================
-      # Note: FastAPI는 Python 기반으로 컴파일 빌드가 없어 아티팩트 저장 제외
-
-  # ========================================
-  # 실패 알림 (Discord)
-  # ========================================
   notify-failure:
     runs-on: ubuntu-latest
     needs: ci
@@ -82,5 +62,4 @@ jobs:
             **Commit:** ${{ github.sha }}
             **Author:** ${{ github.actor }}
             **에러 로그 보기:** ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-
           color: 0xFF0000
