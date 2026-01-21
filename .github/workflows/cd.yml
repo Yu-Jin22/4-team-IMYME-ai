@@ -8,6 +8,13 @@ on:
     push:
       branches:
           - infra/cicd
+    pull_request:
+        types: [ closed ]
+        branches: [dev, main]
+
+    # push:
+    #   branches:
+    #       - infra/cicd
 
 jobs:
   deploy-dev:
