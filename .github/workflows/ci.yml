@@ -1,8 +1,8 @@
 name: AI CI
 
 on:
-  push:
-    branches: [main, develop]
+  pull_request:
+    branches: [dev, main]
 
 jobs:
   ci:
