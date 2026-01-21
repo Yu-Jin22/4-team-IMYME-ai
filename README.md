@@ -8,11 +8,11 @@
 
 ## 프로젝트 구조 (Project Structure)
 
--   **`ai_server/`**: FastAPI AI 서버 (클라이언트 역할). [`src/server`에서 변경됨]
+-   **`ai_server/`**: FastAPI AI 서버 (클라이언트 역할).
     -   로컬 컴퓨터나 일반 서버에서 실행됩니다.
     -   `ai_server/app/core/config.py`에서 설정 관리 (`RUNPOD_API_KEY`, `RUNPOD_ENDPOINT_ID` 필요).
     -   실행: `cd ai_server && python -m app.main`
--   **`stt_server/`**: RunPod Serverless 워커 (GPU 작업). [`src/worker` + `deploy`에서 변경됨]
+-   **`stt_server/`**: RunPod Serverless 워커 (GPU 작업).
     -   **RunPod**에 도커 이미지로 배포됩니다.
     -   `handler.py`와 모델/추론 서비스 코드가 플랫(Flat) 구조로 포함되어 있습니다.
     -   `Dockerfile`이 이 디렉토리에 포함되어 있습니다.
@@ -43,6 +43,7 @@ docker build --platform linux/amd64 -t whoo-ai-server-worker -f stt_server/Docke
     export RUNPOD_API_KEY="your_api_key"
     export RUNPOD_ENDPOINT_ID="your_endpoint_id"
     
+    cd ai_server
     python -m app.main
     ```
 
@@ -77,4 +78,3 @@ docker build --platform linux/amd64 -t whoo-ai-server-worker -f stt_server/Docke
 2.  **Endpoint ID** 확인 (예: `vllm-xxxxx`).
 3.  **API Key** 생성 (RunPod 설정 > API Keys).
 4.  이 정보들을 .env 파일에 설정하여 실행하세요.
-
