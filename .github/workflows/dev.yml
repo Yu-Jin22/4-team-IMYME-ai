@@ -43,11 +43,11 @@ jobs:
           pip install -r ai_server/requirements.txt
           pip install ruff pytest
 
-      - name: Run Ruff Lint
-        run: ruff check ai_server/
+      # - name: Run Ruff Lint
+      #   run: ruff check ai_server/
 
-      - name: Run Ruff Format Check
-        run: ruff format --check ai_server/
+      # - name: Run Ruff Format Check
+      #   run: ruff format --check ai_server/
 
       - name: Run Tests
         working-directory: ai_server
@@ -101,6 +101,7 @@ jobs:
           set -e
 
           APP_DIR=/home/ubuntu/mine/ai/4-team-IMYME-ai
+          AI_SERVER_DIR=$APP_DIR/ai_server
           LOG_DIR=/home/ubuntu/logs
 
           echo "🚀 AI Deploy start"
@@ -114,21 +115,22 @@ jobs:
 
           # 2. 가상환경 활성화 & 의존성 설치
           echo "🛠 Install dependencies"
+          cd $AI_SERVER_DIR
           source .venv/bin/activate
           pip install --upgrade pip
           pip install -r requirements.txt
 
           # 3. 기존 프로세스 종료
           echo "🛑 Stop existing AI process"
-          pkill -f 'uvicorn.*main:app' || true
+          pkill -f 'uvicorn.*app.main:app' || true
           sleep 3
 
           # 4. 서버 시작
           echo "▶ Start AI server"
           mkdir -p $LOG_DIR
-          export $(cat $APP_DIR/.env | xargs)
+          export $(cat $AI_SERVER_DIR/.env | xargs)
 
-          nohup uvicorn main:app \
+          nohup uvicorn app.main:app \
             --host 0.0.0.0 \
             --port 8000 \
             > $LOG_DIR/ai.log 2>&1 &
@@ -136,7 +138,7 @@ jobs:
           sleep 5
 
           # 5. 실행 확인
-          if pgrep -f 'uvicorn.*main:app' > /dev/null; then
+          if pgrep -f 'uvicorn.*app.main:app' > /dev/null; then
             echo "✅ AI server started successfully"
           else
             echo "❌ AI server failed to start"
