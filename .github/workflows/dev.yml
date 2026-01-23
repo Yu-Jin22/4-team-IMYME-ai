@@ -4,9 +4,13 @@ on:
   pull_request:
     branches:
       - dev
+    paths:
+      - 'ai_server/**'
   push:
     branches:
       - dev
+    paths:
+      - 'ai_server/**'
 
 permissions:
   contents: read
@@ -88,6 +92,25 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+
+      # 0️⃣ Runner IP 획득 및 보안 그룹 추가
+      - name: Get Runner IP
+        id: ip
+        run: echo "ipv4=$(curl -s https://api.ipify.org)" >> $GITHUB_OUTPUT
+
+      - name: Add IP to Security Group
+        run: |
+          aws ec2 authorize-security-group-ingress \
+            --group-id ${{ secrets.AWS_SECURITY_GROUP_ID }} \
+            --protocol tcp \
+            --port 22 \
+            --cidr "${{ steps.ip.outputs.ipv4 }}/32"
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ap-northeast-2
+
+
       - name: Set up SSH
         run: |
           mkdir -p ~/.ssh
@@ -166,6 +189,20 @@ jobs:
 
           echo "🎉 AI Deploy finished"
           EOF
+
+      # 5️⃣ 보안 그룹에서 IP 제거 (항상 실행)
+      - name: Remove IP from Security Group
+        if: always()
+        run: |
+          aws ec2 revoke-security-group-ingress \
+            --group-id ${{ secrets.AWS_SECURITY_GROUP_ID }} \
+            --protocol tcp \
+            --port 22 \
+            --cidr "${{ steps.ip.outputs.ipv4 }}/32"
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ap-northeast-2
 
   cd-notify-success:
     needs: cd
