@@ -5,6 +5,7 @@ on:
     branches:
       - dev
     paths:
+      - '.github/**'
       - 'ai_server/**'
   push:
     branches:
