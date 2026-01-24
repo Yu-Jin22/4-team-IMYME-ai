@@ -2,7 +2,6 @@ from pydantic_settings import BaseSettings
 from functools import lru_cache
 
 
-
 # Configuration class using Pydantic Settings for environment management
 # 환경 설정을 관리하기 위해 Pydantic Settings를 사용하는 설정 클래스
 class Settings(BaseSettings):
