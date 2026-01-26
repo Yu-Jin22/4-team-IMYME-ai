@@ -43,7 +43,7 @@ class FeedbackDetail(BaseModel):
     """
 
     summarize: str
-    keyword: List[str]
+    keyword: List[Any]
     facts: str
     understanding: str
     personalized: str
