@@ -4,7 +4,15 @@ import logging
 from typing import List, Optional
 import json
 import asyncio
-from app.schemas.knowledge import *
+from app.schemas.knowledge import (
+    RawFeedbackItem,
+    KnowledgeCandidate,
+    RefineCandidatesResponseData,
+    EvaluateCandidateInput,
+    EvaluateSimilarInput,
+    KnowledgeEvaluationResult,
+    KnowledgeAction,
+)
 from app.services.embedding_service import embedding_service
 from app.core.prompts import KNOWLEDGE_REFINEMENT_PROMPT, KNOWLEDGE_EVALUATION_PROMPT
 
@@ -30,7 +38,6 @@ class KnowledgeService:
         Refines raw feedback into formal knowledge candidates and generates embeddings.
         Returns wrapped response data.
         """
-        results = []
 
         # Parallel execution for refinement
         async def process_item(item: RawFeedbackItem) -> Optional[KnowledgeCandidate]:

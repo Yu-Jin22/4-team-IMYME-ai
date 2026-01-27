@@ -1,6 +1,14 @@
 from fastapi import APIRouter
 import logging
-from app.schemas.knowledge import *
+from app.schemas.knowledge import (
+    RefineCandidatesRequest,
+    RefineCandidatesResponse,
+    RefineCandidatesResponseData,
+    KnowledgeEvaluationRequest,
+    KnowledgeEvaluationResponse,
+    KnowledgeEvaluationResult,
+    KnowledgeAction,
+)
 from app.services.knowledge_service import knowledge_service
 
 router = APIRouter()
