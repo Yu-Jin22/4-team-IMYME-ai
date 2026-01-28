@@ -99,7 +99,37 @@ docker build --platform linux/amd64 -t imyme-ai-server-worker -f stt_server/Dock
 }
 ```
 
-### 3. 에러 코드 (Error Codes)
+```
+
+### 3. 심층 분석 요청 (Solo Submission) [SOLO-001]
+-   **Endpoint**: `POST /api/v1/solo/submissions`
+-   **Description**: 사용자의 답변 텍스트를 분석하고 피드백을 생성함. (비동기 작업)
+
+**Request Body (Example: 프로세스 설명)**
+```json
+{
+  "userText": "프로세스는 현재 실행 중인 프로그램을 의미합니다. 프로그램 자체가 그냥 코드 덩어리라면, 프로세스는 메모리에 올라가서 실제로 작업을 수행하는 동적인 상태라고 볼 수 있어요. 각 프로세스는 독립적인 메모리 영역을 가집니다.",
+  "criteria": {
+    "keyword": "Process",
+    "modelAnswer": "프로세스(Process)란 컴퓨터에서 실행되고 있는 프로그램을 말합니다. 디스크에 저장된 정적인 프로그램(Code)이 메모리에 적재되어 CPU의 할당을 받을 수 있는 동적인 상태로 변환된 것입니다. 프로세스는 운영체제로부터 주소 공간, 파일, 메모리 등의 자원을 할당받으며, 각 프로세스는 Code, Data, Stack, Heap의 구조로 된 독립적인 메모리 영역을 가집니다."
+  },
+  "history": []
+}
+```
+
+**Response**
+```json
+{
+  "success": true,
+  "data": {
+    "taskId": "task-uuid-1234",
+    "status": "PENDING"
+  },
+  "error": null
+}
+```
+
+### 4. 에러 코드 (Error Codes)
 
 | HTTP Code | Error Code | 설명 |
 | :--- | :--- | :--- |
@@ -109,24 +139,24 @@ docker build --platform linux/amd64 -t imyme-ai-server-worker -f stt_server/Dock
 | **500** | `STT_FAILURE` | STT 엔진 변환 실패 또는 타임아웃 |
 | **500** | `WARMUP_FAILED` | 워밍업 신호 전송 실패 |
 
-### 4. RunPod 배포 (RunPod Deployment)
+### 5. RunPod 배포 (RunPod Deployment)
 
 이미지를 **Docker Hub** 등에 올렸다면(`docker push`), 이제 RunPod 웹사이트에서 Serverless Endpoint를 생성해야 함.
 
-#### 4.1. 템플릿 생성 (New Template)
+#### 5.1. 템플릿 생성 (New Template)
 1.  RunPod 콘솔 > Serverless > **Templates** > **New Template** 클릭.
 2.  **Container Image**: 방금 올린 이미지 주소 (예: `sincheol/whisper-serverless:v1`).
 3.  **Container Disk**: 모델이 크므로 **10GB 이상**.
 4.  **Env Variables**: 필요한 경우 추가 (기본적으로 필요 없음).
 5.  **Save Template** 클릭.
 
-#### 4.2. 엔드포인트 생성 (New Endpoint)
+#### 5.2. 엔드포인트 생성 (New Endpoint)
 1.  RunPod 콘솔 > Serverless > **Network Volume**(선택) / **Endpoint** > **New Endpoint** 클릭.
 2.  방금 만든 템플릿 선택.
 3.  **GPU Type**: GPU 선택.
 4.  **Create** 클릭.
 
-#### 4.3. 연동 정보 확인 및 AI 서버 설정
+#### 5.3. 연동 정보 확인 및 AI 서버 설정
 1.  생성된 Endpoint 클릭 > 상세 페이지 이동.
 2.  **Endpoint ID** 확인 (예: `vllm-xxxxx`).
 3.  **API Key** 생성 (RunPod 설정 > API Keys).
