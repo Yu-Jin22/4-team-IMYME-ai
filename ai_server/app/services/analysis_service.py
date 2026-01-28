@@ -54,7 +54,7 @@ class AnalysisService:
 
             # 3. Aggregate Results
             final_result = {
-                "score": score_result["score"],
+                "overall_score": score_result["overall_score"],
                 "level": score_result["level"],
                 "feedback": feedback_result,
             }
