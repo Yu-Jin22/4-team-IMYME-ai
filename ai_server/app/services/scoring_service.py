@@ -32,7 +32,10 @@ class ScoringService:
             )
             result = json.loads(cleaned_text)
 
-            return {"score": result.get("score", 0), "level": result.get("level", "C")}
+            return {
+                "overall_score": result.get("overall_score", 0),
+                "level": result.get("level", 1),
+            }
         except Exception as e:
             logger.error(f"Scoring failed: {e}")
             # Return a fallback or re-raise depending on policy.
@@ -53,8 +56,8 @@ class ScoringService:
         [Output Format]
         Return purely JSON without any markdown formatting.
         {{
-            "score": <0-100 integer>,
-            "level": <"S", "A", "B", "C">
+            "overall_score": <0-100 integer>,
+            "level": <1-5 integer>
         }}
         """
 
