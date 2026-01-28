@@ -10,7 +10,9 @@ logger = logging.getLogger("whoo-ai-server")
 # Initialize FastAPI app
 # FastAPI 앱 초기화
 app = FastAPI(
-    title=settings.PROJECT_NAME, openapi_url=f"{settings.API_V1_STR}/openapi.json"
+    title=settings.PROJECT_NAME,
+    openapi_url=f"{settings.API_V1_STR}/openapi.json",
+    root_path=settings.ROOT_PATH,
 )
 
 # Include API routers
