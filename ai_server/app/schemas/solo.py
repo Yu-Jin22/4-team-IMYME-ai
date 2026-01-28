@@ -57,7 +57,9 @@ class SoloResultDetail(BaseModel):
     SOLO-002: 분석 결과 상세 (점수 및 피드백)
     """
 
-    overall_score: int = Field(..., alias="overallScore", description="종합 점수 (0-100)")
+    overall_score: int = Field(
+        ..., alias="overallScore", description="종합 점수 (0-100)"
+    )
     level: int = Field(..., ge=1, le=5, description="레벨 (1-5)")
     feedback: FeedbackDetail
 
