@@ -16,6 +16,7 @@ app = FastAPI(
     root_path=settings.ROOT_PATH,
 )
 
+
 @app.middleware("http")
 async def verify_internal_secret(request: Request, call_next):
     # 1. Skip checks for Health Check or Docs
@@ -23,9 +24,15 @@ async def verify_internal_secret(request: Request, call_next):
     # Also skip ROOT_PATH if it exists in request (Reverse Proxy handling)
     path = request.url.path
     if settings.ROOT_PATH and path.startswith(settings.ROOT_PATH):
-        path = path[len(settings.ROOT_PATH):]
+        path = path[len(settings.ROOT_PATH) :]
 
-    if path in ["/health", "/docs", "/openapi.json", "/", settings.API_V1_STR + "/openapi.json"]:
+    if path in [
+        "/health",
+        "/docs",
+        "/openapi.json",
+        "/",
+        settings.API_V1_STR + "/openapi.json",
+    ]:
         return await call_next(request)
 
     # 2. Check Header
@@ -33,12 +40,16 @@ async def verify_internal_secret(request: Request, call_next):
     if not settings.INTERNAL_SECRET_KEY:
         # If no secret set in env, allow all (or block all? user didn't specify, assuming allow for dev convenience or block for safety)
         # Let's perform check only if key is set.
-        pass 
+        pass
     elif request.headers.get("x-internal-secret") != settings.INTERNAL_SECRET_KEY:
-        return JSONResponse(status_code=403, content={"detail": "Access Denied: Invalid Internal Secret"})
+        return JSONResponse(
+            status_code=403,
+            content={"detail": "Access Denied: Invalid Internal Secret"},
+        )
 
     response = await call_next(request)
     return response
+
 
 # Include API routers
 # API 라우터 포함
